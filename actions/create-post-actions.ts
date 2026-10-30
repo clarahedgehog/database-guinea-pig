@@ -1,0 +1,37 @@
+'use server'
+
+import z from "zod"
+import { createPostSchema } from "./schemas"
+import { createClient } from "@/lib/supabase/serverClient"
+import { slugify } from "@/lib/supabase/slugify"
+import { redirect } from "next/navigation"
+import { uploadImage } from "@/lib/supabase/upload-image"
+
+export const CreatePost = async (postdata: z.infer<typeof createPostSchema>) => {
+  const parsedData = createPostSchema.parse(postdata)
+
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) throw new Error("Unauthorized access")
+
+  const slug = slugify(parsedData.title)
+
+  const imageFile = postdata.image?.get('image')
+  if (!(imageFile instanceof File) && imageFile !== null && imageFile !== "undefined") {
+    throw Error("Image is not in a valid format")
+  }
+
+  const imageUrl = (imageFile && imageFile !== "undefined") ? await uploadImage(imageFile) : null
+
+  const { data, error } = await supabase.from("Posts").insert([{
+    ...parsedData,
+    slug: slug,
+    image: imageUrl,
+    author: user.id
+  }])
+
+  if (error) console.log(error)
+
+  redirect(`/${slug}`)
+}

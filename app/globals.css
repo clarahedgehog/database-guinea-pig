@@ -1,26 +1,36 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+* {
+  box-sizing: border-box;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@theme {
+  --color-hotpink: #fe3c72;
+  --color-hotorange: #fd5564;
+  --color-shoe: #424242;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.font-montserrat {
+  font-family: var(--font-montserrat);
+  font-weight: 400;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.button {
+  @apply block py-4 rounded-xl text-2xl font-bold cursor-pointer
+}
+
+.button-secondary {
+  @apply p-4 rounded-xl text-2xl font-bold cursor-pointer
+}
+
+.heading {
+  @apply text-4xl text-center m-8
+}
+
+.input {
+  @apply border-shoe border p-2 mb-4 rounded-md
+}
+
+.custom-border {
+  @apply rounded-xl mb-4 border border-hotorange p-4
 }
